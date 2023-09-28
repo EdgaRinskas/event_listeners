@@ -4,16 +4,16 @@ let number = 5;
 function updateDisplay() {
     numbersDiv.innerHTML = '';
 
-    const h3Element = createAndAppend("h3", number);
-    const plusBtn = createAndAppend("button", "+", () => incrementNumber());
-    const resetBtn = createAndAppend("button", "Reset", () => resetNumber());
-    const minusBtn = createAndAppend("button", "-", () => decrementNumber());
-    const inputElement = createAndAppend("input", "", null, "number");
+    const h3 = createEl("h3", number);
+    const plusBtn = createEl("button", "+", increment);
+    const resetBtn = createEl("button", "Reset", reset);
+    const minusBtn = createEl("button", "-", decrement);
+    const input = createEl("input", "", null, "number");
 
-    inputElement.value = number;
-    inputElement.placeholder = "Enter a number";
-    inputElement.addEventListener("input", () => {
-        const inputValue = parseInt(inputElement.value);
+    input.value = number;
+    input.placeholder = "Enter a number";
+    input.addEventListener("input", () => {
+        const inputValue = parseInt(input.value);
         if (!isNaN(inputValue)) {
             number = inputValue;
             updateDisplay();
@@ -22,37 +22,37 @@ function updateDisplay() {
 
     minusBtn.disabled = number < 2;
     plusBtn.disabled = number >= 10;
-    h3Element.style.color = number >= 5 ? "green" : "red";
+    h3.style.color = number >= 5 ? "green" : "red";
 }
 
-function createAndAppend(tagName, text = '', clickHandler = null, type = '') {
-    const element = document.createElement(tagName);
-    element.textContent = text;
+function createEl(tag, text = '', clickHandler = null, type = '') {
+    const el = document.createElement(tag);
+    el.textContent = text;
     if (clickHandler) {
-        element.addEventListener("click", clickHandler);
+        el.addEventListener("click", clickHandler);
     }
     if (type) {
-        element.type = type;
+        el.type = type;
     }
-    numbersDiv.appendChild(element);
-    return element;
+    numbersDiv.appendChild(el);
+    return el;
 }
 
-function incrementNumber() {
+function increment() {
     if (number < 10) {
         number++;
         updateDisplay();
     }
 }
 
-function decrementNumber() {
+function decrement() {
     if (number > 1) {
         number--;
         updateDisplay();
     }
 }
 
-function resetNumber() {
+function reset() {
     number = 5;
     updateDisplay();
 }
