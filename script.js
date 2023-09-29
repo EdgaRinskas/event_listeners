@@ -1,60 +1,104 @@
-const numbersDiv = document.getElementById("numbers");
-let number = 5;
+console.log('evet listeners');
+const numbersDiv = document.getElementById('numbers');
+const h3Element = document.createElement('h3');
+h3Element.textContent = '5';
 
-function updateDisplay() {
-    numbersDiv.innerHTML = '';
+const plusButton = document.createElement('button');
+plusButton.textContent = '+';
+const minusButton = document.createElement('button');
+minusButton.textContent = '-';
+let score = 5;
 
-    const h3 = createEl("h3", number);
-    const plusBtn = createEl("button", "+", increment);
-    const resetBtn = createEl("button", "Reset", reset);
-    const minusBtn = createEl("button", "-", decrement);
-    const input = createEl("input", "", null, "number");
+function updateUI() {
+    h3Element.textContent = score.toString();
+    if (score < 2) {
+        minusButton.setAttribute('disabled', true);
+        minusButton.removeAttribute('disabled');
+    }
+    if (score === 10) {
+        plusButton.setAttribute('disabled', true);
+    } else {
+        plusButton.removeAttribute('disabled');
+    }
+    h3Element.style.color = score >= 5 ? 'green' : 'red';
+}
+plusButton.addEventListener('click', function () {
+    if (score < 10) {
+        score++;
+        updateUI();
+    }
+});
+plusButton.addEventListener('click', function () {
+    if (score < 10) {
+        score++;
+        updateUI();
+    }
+});
+minusButton.addEventListener('click', function () {
+    if (score > 1) {
+        score--;
+        updateUI();
+    }
+});
+const resetButton = document.createElement('button');
+resetButton.textContent = 'Reset';
+resetButton.addEventListener('click', function () {
+    score = 5;
+    updateUI();
+});
+const input1 = document.createElement('input');
+input1.type = 'number';
+input1.id = 'input';
+input1.addEventListener('change', function () {
+    const newScore = parseInt(input1.value);
+    if (!isNaN(newScore)) {
+        score = newScore;
+        updateUI();
+    }
+});
+const input2 = document.createElement('input');
+input2.type = 'number';
+input2.id = 'input2';
+input2.addEventListener('change', function () {
+    const newScore = parseInt(input2.value);
+    if (!isNaN(newScore)) {
+        score = newScore;
+        updateUI();
+    }
+});
+const h4Element = document.createElement('h4');
+h4Element.textContent = 'Balai:';
 
-    input.value = number;
-    input.placeholder = "Enter a number";
-    input.addEventListener("input", () => {
-        const inputValue = parseInt(input.value);
-        if (!isNaN(inputValue)) {
-            number = inputValue;
-            updateDisplay();
-        }
+const ulElement = document.createElement('ul');
+
+const addScoreButton = document.createElement('button');
+addScoreButton.textContent = 'Įrašyti balą';
+addScoreButton.addEventListener('click', function () {
+    score--;
+    updateUI();
+
+    const liElement = document.createElement('li');
+    liElement.textContent = score.toString();
+    liElement.style.color = h3Element.style.color;
+
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.addEventListener('click', function () {
+        ulElement.removeChild(liElement);
     });
+    liElement.appendChild(deleteButton);
+    ulElement.insertBefore(liElement, ulElement.firstChild);
+});
 
-    minusBtn.disabled = number < 2;
-    plusBtn.disabled = number >= 10;
-    h3.style.color = number >= 5 ? "green" : "red";
-}
+numbersDiv.appendChild(h3Element);
+numbersDiv.appendChild(plusButton);
+numbersDiv.appendChild(resetButton);
+numbersDiv.appendChild(minusButton);
+numbersDiv.appendChild(input1);
+numbersDiv.appendChild(input2);
+numbersDiv.appendChild(h4Element);
+numbersDiv.appendChild(ulElement);
+numbersDiv.appendChild(addScoreButton);
 
-function createEl(tag, text = '', clickHandler = null, type = '') {
-    const el = document.createElement(tag);
-    el.textContent = text;
-    if (clickHandler) {
-        el.addEventListener("click", clickHandler);
-    }
-    if (type) {
-        el.type = type;
-    }
-    numbersDiv.appendChild(el);
-    return el;
-}
-
-function increment() {
-    if (number < 10) {
-        number++;
-        updateDisplay();
-    }
-}
-
-function decrement() {
-    if (number > 1) {
-        number--;
-        updateDisplay();
-    }
-}
-
-function reset() {
-    number = 5;
-    updateDisplay();
-}
-
-updateDisplay();
+updateUI();
+console.groupEnd();
