@@ -1,54 +1,92 @@
-console.log('evet listeners');
+console.log('event listeners');
+
 const numbersDiv = document.getElementById('numbers');
 const h3Element = document.createElement('h3');
 h3Element.textContent = '5';
 
-const plusButton = document.createElement('button');
-plusButton.textContent = '+';
-const minusButton = document.createElement('button');
-minusButton.textContent = '-';
+const plusButton = createButton('+');
+const minusButton = createButton('-');
+const plus2Button = createButton('+2');
+const minus2Button = createButton('-2');
+const resetButton = createButton('Reset');
+const addScoreButton = createButton('Enter number');
+
 let score = 5;
 
 function updateUI() {
     h3Element.textContent = score.toString();
+
     if (score < 2) {
-        minusButton.setAttribute('disabled', true);
-        minusButton.removeAttribute('disabled');
-    }
-    if (score === 10) {
-        plusButton.setAttribute('disabled', true);
+        disableButton(minusButton);
+        disableButton(minus2Button);
     } else {
-        plusButton.removeAttribute('disabled');
+        enableButton(minusButton);
+        enableButton(minus2Button);
     }
+
+    if (score === 10 || score === 9) {
+        disableButton(plusButton);
+        disableButton(plus2Button);
+    } else {
+        enableButton(plusButton);
+        enableButton(plus2Button);
+    }
+
     h3Element.style.color = score >= 5 ? 'green' : 'red';
 }
+
+function createButton(text) {
+    const button = document.createElement('button');
+    button.textContent = text;
+    return button;
+}
+
+function disableButton(button) {
+    button.setAttribute('disabled', true);
+}
+
+function enableButton(button) {
+    button.removeAttribute('disabled');
+}
+
 plusButton.addEventListener('click', function () {
     if (score < 10) {
         score++;
         updateUI();
     }
 });
-plusButton.addEventListener('click', function () {
-    if (score < 10) {
-        score++;
+
+plus2Button.addEventListener('click', function () {
+    if (score < 9) {
+        score += 2;
         updateUI();
     }
 });
+
 minusButton.addEventListener('click', function () {
     if (score > 1) {
         score--;
         updateUI();
     }
 });
-const resetButton = document.createElement('button');
-resetButton.textContent = 'Reset';
+
+minus2Button.addEventListener('click', function () {
+    if (score > 1) {
+        score -= 2;
+        updateUI();
+    }
+});
+
 resetButton.addEventListener('click', function () {
     score = 5;
+    input1.value = '';
     updateUI();
 });
+
 const input1 = document.createElement('input');
 input1.type = 'number';
-input1.id = 'input';
+input1.id = 'input1';
+
 input1.addEventListener('change', function () {
     const newScore = parseInt(input1.value);
     if (!isNaN(newScore)) {
@@ -56,46 +94,36 @@ input1.addEventListener('change', function () {
         updateUI();
     }
 });
-const input2 = document.createElement('input');
-input2.type = 'number';
-input2.id = 'input2';
-input2.addEventListener('change', function () {
-    const newScore = parseInt(input2.value);
-    if (!isNaN(newScore)) {
-        score = newScore;
-        updateUI();
-    }
-});
+
 const h4Element = document.createElement('h4');
-h4Element.textContent = 'Balai:';
+h4Element.textContent = 'Grade:';
 
 const ulElement = document.createElement('ul');
 
-const addScoreButton = document.createElement('button');
-addScoreButton.textContent = 'Įrašyti balą';
 addScoreButton.addEventListener('click', function () {
-    score--;
-    updateUI();
+    const scoreInput = parseInt(prompt('Enter a score:'));
+    if (!isNaN(scoreInput)) {
+        const liElement = document.createElement('li');
+        liElement.textContent = scoreInput.toString();
+        liElement.style.color = h3Element.style.color;
 
-    const liElement = document.createElement('li');
-    liElement.textContent = score.toString();
-    liElement.style.color = h3Element.style.color;
+        const deleteButton = createButton('Delete');
+        deleteButton.addEventListener('click', function () {
+            ulElement.removeChild(liElement);
+        });
 
-    const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Delete';
-    deleteButton.addEventListener('click', function () {
-        ulElement.removeChild(liElement);
-    });
-    liElement.appendChild(deleteButton);
-    ulElement.insertBefore(liElement, ulElement.firstChild);
+        liElement.appendChild(deleteButton);
+        ulElement.insertBefore(liElement, ulElement.firstChild);
+    }
 });
 
 numbersDiv.appendChild(h3Element);
 numbersDiv.appendChild(plusButton);
-numbersDiv.appendChild(resetButton);
 numbersDiv.appendChild(minusButton);
+numbersDiv.appendChild(plus2Button);
+numbersDiv.appendChild(minus2Button);
+numbersDiv.appendChild(resetButton);
 numbersDiv.appendChild(input1);
-numbersDiv.appendChild(input2);
 numbersDiv.appendChild(h4Element);
 numbersDiv.appendChild(ulElement);
 numbersDiv.appendChild(addScoreButton);
